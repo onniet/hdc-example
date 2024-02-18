@@ -1,8 +1,7 @@
 import { Component, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { MatCard } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
-import { WalletStore } from '@heavy-duty/wallet-adapter';
+import { injectPublicKey } from '@heavy-duty/wallet-adapter';
 import { computedAsync } from 'ngxtension/computed-async';
 import { ShyftApiService } from './shyft-api.service';
 
@@ -27,8 +26,7 @@ import { ShyftApiService } from './shyft-api.service';
 })
 export class BalanceSectionComponent {
   private readonly _shyftApiService = inject(ShyftApiService);
-  private readonly _walletStore = inject(WalletStore);
-  private readonly _publicKey = toSignal(this._walletStore.publicKey$);
+  private readonly _publicKey = injectPublicKey();
 
   readonly account = computedAsync(() =>
     this._shyftApiService.getAccount(this._publicKey()?.toBase58()),

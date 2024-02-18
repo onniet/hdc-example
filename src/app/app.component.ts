@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterOutlet } from '@angular/router';
-import { WalletStore } from '@heavy-duty/wallet-adapter';
+import { injectPublicKey } from '@heavy-duty/wallet-adapter';
 import { HdWalletMultiButtonComponent } from '@heavy-duty/wallet-adapter-material';
 import { computedAsync } from 'ngxtension/computed-async';
 import { ShyftApiService } from './shyft-api.service';
@@ -35,8 +34,7 @@ import { ShyftApiService } from './shyft-api.service';
 })
 export class AppComponent {
   private readonly _shyftApiService = inject(ShyftApiService);
-  private readonly _walletStore = inject(WalletStore);
-  private readonly _publicKey = toSignal(this._walletStore.publicKey$);
+  private readonly _publicKey = injectPublicKey();
 
   readonly balance = computedAsync(() =>
     this._shyftApiService.getBalance(this._publicKey()?.toBase58()),
