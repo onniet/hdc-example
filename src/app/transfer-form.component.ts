@@ -1,10 +1,10 @@
-import { Component, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
-import { EventEmitter } from 'stream';
+//import { EventEmitter } from 'stream';
 
 export interface TransferFormModel {
   memo: string | null;
@@ -97,8 +97,8 @@ export interface TransferFormPayload {
         }
       </mat-form-field>
 
-      <footer>
-        <button type="submit">Enviar</button>
+      <footer class="flex justify-center">
+        <button type="submit" mat-raised-button color="primary">Enviar</button>
       </footer>
     </form>
   `,
@@ -115,8 +115,19 @@ export class TransferFormComponent {
   @Output() readonly submitForm = new EventEmitter<TransferFormPayload>();
 
   onSubmitForm(form: NgForm) {
-    if (form.invalid) {
+    if (
+      form.invalid ||
+      this.model.amount === null ||
+      this.model.memo === null ||
+      this.model.receiverAddress === null
+    ) {
       console.error('El formulario es inválido');
+    } else {
+      this.submitForm.emit({
+        amount: this.model.amount,
+        memo: this.model.memo,
+        receiverAddress: this.model.receiverAddress,
+      });
     }
   }
 }
